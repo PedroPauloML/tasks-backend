@@ -1,21 +1,13 @@
 const express = require("express")
 const app = express()
-const bodyParser = require("body-parser")
+const db = require("./config/db")
+const consign = require("consign")
 
-app.use(bodyParser.json())
+consign()
+  .then("./config/middlewares.js")
+  .into(app)
 
-app.get("/:valor", (req, res, next) => {
-  console.log("Func 0")
-  
-  next()
-})
-
-app.get("/:valor", (req, res) => {
-  console.log("Func 1")
-  response = "Parâmetro = " + req.params.valor +
-    "; Query = " + Array.from(Object.keys(req.query)).map(k => `${k}: ${req.query[k]}`).join(", ")
-  res.status(200).send(response)
-})
+app.db = db
 
 app.listen(3000, () => {
   console.log("Backend executando...")
